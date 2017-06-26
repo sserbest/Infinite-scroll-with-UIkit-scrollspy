@@ -1,0 +1,62 @@
+<html class="uk-notouch">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="robots" content="noindex">
+		<link rel="stylesheet prefetch" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.21.0/css/uikit.almost-flat.min.css">
+	</head>
+	<body>
+		<div class="uk-container uk-container-center" style="min-height:600px">
+		  <h1>Infinite list</h1>
+		  <ul class="uk-list uk-list-line" id="infinite-list"></ul>
+		  <div id="scrollspy" data-uk-scrollspy="{topoffset: 200, repeat: true}" class="uk-text-center uk-scrollspy-init-inview uk-scrollspy-inview">
+		    <i class="uk-icon-refresh uk-icon-spin uk-hidden"></i>
+		  </div>
+		  <script type="text/listtemplate">
+		    <li><h3 class="uk-text-success">Again a new item!</h3><p>With a bit of new content</p></li>
+		    <li><h3>Another new item!</h3><p>With a bit of content</p></li>
+		    <li><h3>Yet a new item!</h3><p>With a bit of content</p></li>
+		    <li><h3>New item!</h3><p>With a bit of content</p></li> 
+		    <li><h3>A new item!</h3><p>With a bit of content</p></li> 
+		    <li><h3>A last new item!</h3><p>With a bit of content</p></li>
+		  </script>
+		</div>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/uikit.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/lightbox.min.js"></script>
+		<script>(function($, UI) {
+		  var list = $('#infinite-list'),
+		    scrollspy = $('#scrollspy'),
+		      spinner = $('#scrollspy i'),
+		    content = $('script[type="text/listtemplate"]').html(),
+		    addContent = function() {
+		      spinner.removeClass('uk-hidden');
+		      //use ajax-request to retreive content, timeout for simulating callback
+		      setTimeout(function() {
+		        //add to dom
+		        list.append(content);
+		        spinner.addClass('uk-hidden');
+		        //when scrollspy is not pushed down far enough to get out of view, add more content
+		        setTimeout(function() {
+		           if (UI.Utils.isInView(scrollspy, {topoffset: 200})) {
+		            addContent();
+		          }
+		        }, 50);
+		      }, 500)
+		    }
+
+		  UI.ready(function() {
+		    //add content when inview triggers, 200px before end of list comes into view
+		    scrollspy.on('inview.uk.scrollspy', function() {
+		      addContent();
+		    });
+		    //initial content
+		    addContent();
+		    //just to show the UIkit version in this pen
+		    UI.$body.prepend('<div class="uk-float-right uk-badge">UIkit version: ' + UIkit.version + '</div>');
+		  });
+
+		}(UIkit.$, UIkit));
+		//# sourceURL=pen.js
+		</script>
+	</body>
+</html>
